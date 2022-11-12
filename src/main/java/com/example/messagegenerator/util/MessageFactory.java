@@ -1,6 +1,7 @@
 package com.example.messagegenerator.util;
 
 import com.example.messagegenerator.domain.Message;
+import com.example.messagegenerator.domain.ActiveService;
 
 import java.util.List;
 import java.util.Random;
@@ -8,9 +9,7 @@ import java.util.UUID;
 
 public class MessageFactory {
 
-	private final static List<String> SERVICES =
-			List.of("netflix", "youtube", "amazon_prime", "apple_tv", "hbo", "national_geographic",
-					"apple_music", "spotify", "google_maps", "trip_advisor");
+	private final static List<ActiveService> SERVICES = List.of(ActiveService.values());
 	private final static Random RANDOM = new Random();
 
 	private MessageFactory() { }
@@ -20,7 +19,7 @@ public class MessageFactory {
 				UUID.randomUUID().toString(),
 				agentId,
 				0L,
-				SERVICES.get(RANDOM.nextInt(10)),
+				SERVICES.get(RANDOM.nextInt(SERVICES.size())),
 				RANDOM.nextInt(100)
 		);
 	}

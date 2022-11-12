@@ -6,17 +6,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Configuration
 @EnableAsync
 public class AppConfig {
 
-	@Value("${app.thread.count}")
-	private int threadCount;
+	@Bean
+	public Executor messageExecutor(@Value("${app.message.thread.count}") int threadCount) {
+		return Executors.newWorkStealingPool(threadCount);
+	}
 
 	@Bean
-	public Executor taskExecutor() {
-		return Executors.newWorkStealingPool(threadCount);
+	public ExecutorService agentExecutor(@Value("${app.agent.thread.count}") int threadCount) {
+		return Executors.newFixedThreadPool(threadCount);
 	}
 }

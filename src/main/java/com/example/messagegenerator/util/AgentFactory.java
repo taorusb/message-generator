@@ -4,7 +4,6 @@ import com.example.messagegenerator.domain.Agent;
 import com.example.messagegenerator.domain.DeviceType;
 import com.example.messagegenerator.domain.Manufacturer;
 import com.example.messagegenerator.domain.OSType;
-import com.example.messagegenerator.service.MessageService;
 
 import java.util.List;
 import java.util.Random;
@@ -19,13 +18,12 @@ public class AgentFactory {
 
 	private AgentFactory() { }
 
-	static Agent create(MessageService messageService) {
+	static Agent create() {
 		return new Agent(
 				UUID.randomUUID().toString(),
 				DEVICE_TYPES.get(RANDOM.nextInt(DEVICE_TYPES.size())),
 				MANUFACTURERS.get(RANDOM.nextInt(MANUFACTURERS.size())),
-				OS_TYPES.get(RANDOM.nextInt(OS_TYPES.size())),
-				messageService
+				OS_TYPES.get(RANDOM.nextInt(OS_TYPES.size()))
 		);
 	}
 }

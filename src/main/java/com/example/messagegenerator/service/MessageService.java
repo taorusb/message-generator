@@ -11,12 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
-@Service
 @RequiredArgsConstructor
 @Log4j2
+@Service
 public class MessageService {
 
-	@Value("${app.kafka.topic.name}")
 	private String topic;
 	private final KafkaTemplate<String, Message> kafkaTemplate;
 
@@ -24,5 +23,10 @@ public class MessageService {
 	public CompletableFuture<SendResult<String, Message>> sendMessage(Message message) {
 		log.debug("IN sendMessage : Thread " + Thread.currentThread().getName() + " is sending message: " + message);
 		return kafkaTemplate.send(topic, message).completable();
+	}
+
+	@Value("${app.kafka.topic.name}")
+	public void setTopic(String topic) {
+		this.topic = topic;
 	}
 }

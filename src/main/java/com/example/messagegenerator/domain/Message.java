@@ -13,6 +13,6 @@ public class Message {
 	private String uuid;
 	private String agentId;
 	private Long previousMessageTimestamp;
-	private String activeService;
+	private ActiveService activeService;
 	private Integer qualityScore;
 }
