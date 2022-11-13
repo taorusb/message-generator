@@ -28,16 +28,17 @@ public class AgentService {
 
 	private void executeTask(Agent agent, long waitingMills) {
 		final String currentThreadName = Thread.currentThread().getName();
+		final String agentId = agent.getAgentId();
 		log.debug("IN executeTask : thread " + currentThreadName + " is started sending messages");
-		previousMessageTimestamps.put(currentThreadName, getInitTimestamp());
+		previousMessageTimestamps.put(agentId, getInitTimestamp());
 		agent.getMessages()
 				.forEach(message -> {
-					final long timestamp = previousMessageTimestamps.get(currentThreadName);
-					log.debug("IN executeTask : agent " + agent.getAgentId() + " is sending message" +
+					final long timestamp = previousMessageTimestamps.get(agentId);
+					log.debug("IN executeTask : agent " + agentId + " is sending message" +
 							", current timestamp is " + timestamp);
 					message.setPreviousMessageTimestamp(timestamp);
 					messageService.sendMessage(message)
-							.thenAccept((sendResult) -> setPreviousMessageTimestamp(sendResult, currentThreadName));
+							.thenAccept((sendResult) -> setPreviousMessageTimestamp(sendResult, agentId));
 					try {
 						Thread.sleep(waitingMills);
 					} catch (InterruptedException e) {
@@ -51,10 +52,10 @@ public class AgentService {
 		return ZonedDateTime.now(ZoneId.systemDefault()).minusWeeks(1L).toInstant().toEpochMilli();
 	}
 
-	private void setPreviousMessageTimestamp(SendResult<String, Message> sendResult, String threadName) {
+	private void setPreviousMessageTimestamp(SendResult<String, Message> sendResult, String agentId) {
 		final long timestamp = sendResult.getRecordMetadata().timestamp();
 		log.debug("IN setPreviousMessageTimestamp : " +
-				Thread.currentThread().getName() + " is setting timestamp" + "to " + timestamp);
-		previousMessageTimestamps.put(threadName, timestamp);
+				Thread.currentThread().getName() + " is setting timestamp :" + timestamp + " to agent: " + agentId);
+		previousMessageTimestamps.put(agentId, timestamp);
 	}
 }
